@@ -23,6 +23,7 @@ app.get('/api', (req, res) => {
 // get all pets from the database
 app.get('/api/v1/pets', (req, res) => {
     const pets = req.query.name
+    console.log("hello world!")
     res.send(pets)
     // send the pets array as a response
 
@@ -36,6 +37,7 @@ app.get('/api/v1/pets/owner', (req, res) => {
 
     // find the pet in the pets array
     const pet = pets.find(pet => pet.owner === owner);
+    console.log(owner,pet)
 
     // send the pet as a response
     res.send(pet)
