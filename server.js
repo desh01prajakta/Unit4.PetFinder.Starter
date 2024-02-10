@@ -13,7 +13,7 @@ server.use(express.static(path.join(__dirname, "public")));
 
 // GET - / - returns homepage
 server.get('/', (req, res) => {
-    res.sendFile(__dirname + "/public/index.html");
+    res.send("API is working");
     // serve up the public folder as static index.html file
 
 });
