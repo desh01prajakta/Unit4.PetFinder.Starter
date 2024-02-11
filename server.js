@@ -13,7 +13,7 @@ server.use(express.static(path.join(__dirname, "public")));
 
 // GET - / - returns homepage
 server.get('/', (req, res) => {
-        res.send("API is working")
+    res.sendFile(__dirname + "/public/index.html");
     });
 
 // hello world route
