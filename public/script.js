@@ -1,4 +1,4 @@
-const API_URL = `http://localhost:8080/api/v1/`;
+const API_URL = `http://localhost:3000/api`;
 
 const state = {
   pets: [],
@@ -10,11 +10,11 @@ const state = {
  */
 const fetchAllPets = async () => {
     try {
-      const response = await fetch(`${API_URL}pets`);
+      const response = await fetch(`${API_URL}/v1/pets`);
       const json = await response.json();
       renderAllPets(json);
     } catch (err) {
-      console.error("Uh oh, trouble fetching recipes!", err);
+      console.error("Uh oh, trouble fetching pets!", err);
     }
   };
   //DOM elements
@@ -27,6 +27,7 @@ const createCard = ({
   owner,
   telephone,
   appointments,
+  image,
 }) => {
   //create elements
   const card = document.createElement("section");
@@ -37,28 +38,31 @@ const createCard = ({
   const ownerInfo = document.createElement("p");
   const telephoneInfo = document.createElement("p");
   const appointmentInfo = document.createElement("ul");
+  const img = document.createElement("img");
+
  
   //add classnames to the elements
   card.className = "card";
 
   const elements = [
     { element: nameHeader, info: name },
-    { element: breedInfo, info: `breed: ${breed}` },
+    { element: breedInfo, info: breed },
     { element: ageInfo, info: `age: ${age}` },
     { element: ownerInfo, info: `owner: ${owner}` },
     { element: telephoneInfo, info: `telephone: ${telephone}` },
     { element: appointmentInfo, info: appointments },
+    { element: img, info: image },
     
   ];
 //add recipe information to the elements
   //add the elements to the DOM
   elements.forEach(({ element, info }) => {
-    if (element !== img && element !== appointmentInfo) {
+    if (element !== img && element !== breedInfo) {
       element.textContent = info;
-    } else if (element !== appointmentInfo) {
+    } else if (element !== breedInfo) {
       element.src = info;
     } else {
-      element.textContent = "appointments:";
+      element.textContent = "Breed Types:";
       info.forEach((type) => {
         const li = document.createElement("li");
         li.textContent = type;
@@ -90,7 +94,7 @@ const renderAllPets = (petsList) => {
     }
      //render each recipe
   petsList.forEach((pet) => {
-    const card = createCard(recipe);
+    const card = createCard(pet);
     $main.appendChild(card);
   });
 }
