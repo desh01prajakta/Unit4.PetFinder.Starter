@@ -1,56 +1,70 @@
 // import the pets array from data.js
-const pets = require('./data');
+const pets = require("./data");
+//import path to be able to add styles to our application
 const path = require("path");
 
-// init express server
 const express = require('express');
-const server = express();
+const cors = require('cors');
+const app = express();
 
-const PORT = 3000;
+// Enable CORS for all origins
+app.use(cors());
+
+// Your other middleware and routes...
+
+app.listen(8080, () => {
+  console.log('Server is running on port 8080');
+});
+
 
 //allows us to be able to use style files
-server.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public")));
 
 // GET - / - returns homepage
-server.get('/', (req, res) => {
-    res.sendFile(__dirname + "/public/index.html");
-    });
+app.get("/", (req, res) => {
+  // serve up the public folder as static index.html file
+  res.sendFile(__dirname + "/public/dist/index.html");
+});
 
 // hello world route
-server.get('/api', (req, res) => {
-    res.send('Hello World!');
+app.get("/api", (req, res) => {
+  res.send("Hello World!");
 });
 
 // get all pets from the database
-server.get('/api/v1/pets', (req, res) => {
-       // send the pets array as a response
-       res.send(pets)
+app.get("/api/v1/pets", (req, res) => {
+  // send the pets array as a response
+  res.send(pets);
 });
 
 // get pet by owner with query string
-server.get('/api/v1/pets/owner', (req, res) => {
-    const ownerName = req.query.name.toLowerCase();
-    // get the owner from the request
-    // find the pet in the pets array
-    const petsWithOwnerName = pets.filter(pet => pet.owner && pet.owner.toLowerCase() === ownerName);
-    // send the pet with owner name as a response
-    res.send(petsWithOwnerName);
+app.get("/api/v1/pets/owner", (req, res) => {
+  // get the owner from the request
+  const owner = req.query.owner;
 
+  // find the pet in the pets array
+  const pet = pets.find(
+    (pet) => pet.owner.toLowerCase() === owner.toLowerCase()
+  );
+
+  // send the pet as a response
+  res.send(pet);
 });
 
 // get pet by name
-server.get('/api/v1/pets/:name', (req, res) => {
-    const petName = req.params.name;
-    // get the name from the request
-    // find the pet in the pets array
-    const foundPet = pets.find((pet) =>{
-        return pet.name === petName;
-    })
-        // send the pet as a response
-    res.send(foundPet)
+app.get("/api/v1/pets/:name", (req, res) => {
+  // get the name from the request
+  const name = req.params.name;
+
+  // find the pet in the pets array
+  const pet = pets.find((pet) => pet.name.toLowerCase() === name.toLowerCase());
+
+  // send the pet as a response
+  res.send(pet);
 });
 
-server.listen(PORT, () => {
-    console.log(`Server is listening on port ${PORT}`);
+app.listen(PORT, () => {
+  console.log("Server is listening on port " + PORT);
 });
 
+module.exports = app;
